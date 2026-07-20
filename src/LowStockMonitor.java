@@ -1,25 +1,52 @@
 public class LowStockMonitor {
-    int threshold = 10;
+    private int threshold = 15;
+    public LowStockMonitor(int threshold) {
+        this.threshold = threshold;
+    }
 
-    public boolean isLowStock(Spares part){
-        if(part.quantity < threshold){
+    public int getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(int threshold) {
+        this.threshold = threshold;
+    }
+
+    //Method 1
+    public boolean isLowStock(Spares spare){
+        if(spare.getQuantity() < threshold){
             return true;
         } else {
             return false;
         }
     }
 
-    public void checkAll(Spares[] parts) {
+    //Method 2
+    public Spares[] getLowStock(Spares[] spares, int spareCount) {
+        int count = 0;
+        for (int i = 0; i < spareCount; i++) {
+            if (spares[i] != null && isLowStock(spares[i])) {
+                count += 1;
+            }
+        }
+        Spares[] lowstock = new Spares[count];
+        int index = 0;
+        for (int i = 0; i < spareCount; i++) {
+            if (spares[i] != null && isLowStock(spares[i])) {
+                lowstock[index] = spares[i];
+                index += 1;
+            }
+        }
+        return lowstock;
+    }
+
+    public void checkAll(Spares[] spares, int spareCount) {
         System.out.println("Low Stock Report");
         int lowStockCount = 0;
-        for(int i=0; i<parts.length; i++){
-            if (isLowStock(parts[i])){
+        for(int i = 0; i < spareCount; i++) {
+            if (spares[i] != null && isLowStock(spares[i])){
                 System.out.println("WARNING !!! This Product is low in stock.");
-                System.out.println("Code: " + parts[i].code +
-                                   "Name: " + parts[i].name +
-                                   "Quantity: " + parts[i].quantity +
-                                   "Category: " + parts[i].category);
-
+                System.out.println("Code: " + spares[i].getCode() + " Name: " + spares[i].getName() + " Quantity: " + spares[i].getQuantity() + " Category: " + spares[i].getCategory());
                 lowStockCount += 1;
             }
         }
@@ -29,24 +56,5 @@ public class LowStockMonitor {
         } else{
             System.out.println("Total low stock items: "+ lowStockCount);
         }
-    }
-
-    public Spares[] getLowStockSpares(Spares[] parts){
-        int count = 0;
-        for(int i=0; i<parts.length; i++) {
-            if(isLowStock(parts[i])){
-                count += 1;
-            }
-        }
-
-        Spares[] lowStockSpares = new Spares[count];
-        int index = 0;
-        for(int i=0; i<parts.length; i++){
-            if(isLowStock(parts[i])){
-                lowStockSpares[index] = parts[i];
-                index += 1;
-            }
-        }
-        return lowStockSpares;
     }
 }
