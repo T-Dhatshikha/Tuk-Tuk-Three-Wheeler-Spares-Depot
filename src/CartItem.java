@@ -7,11 +7,11 @@ public class CartItem {
         this.buyingQuantity = buyingQuantity;
     }
 
-    public Spares getPart() {
+    public Spares getSpare() {
         return spare;
     }
 
-    public int getQuantityToBuy() {
+    public int getBuyingQuantity() {
         return buyingQuantity;
     }
 
