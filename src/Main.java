@@ -1,28 +1,40 @@
-public class Main{
+public class Main {
     public static void main(String[] args) {
-        Spares demoSpares = new Spares(
-                "P001", "Bajaj 4-Stroke Piston",
-                "Bajaj", 4500.00,15,
-                "Engine", "2023-10-12",
-                "piston.jpg"
-        );
+        System.out.println(" Malabe Tuk-Tuk & Three-Wheeler Spares Depot");
+        System.out.println();
 
-        Dealers demoDealers = new Dealers(
-                "D101", "Sunil Motors",
-                "0771234567", "Malabe"
-        );
+        //Spares Details
+        FileParser fileParser = new FileParser();
+        AuditLogger logger = new AuditLogger();
+        InventoryManager inventory = new InventoryManager(fileParser);
+        inventory.sort();
+        System.out.println("Total Value: Rs." + inventory.getTotalValue() + "\n");
 
-        System.out.println("Inventory Details");
-        System.out.println(demoSpares.text());
+        LowStockMonitor monitor = new LowStockMonitor();
+        monitor.printReport(inventory.getSpares(), inventory.getSpareCount());
+        System.out.println();
 
-        System.out.println("Dealers Details");
-        System.out.println(demoDealers.text());
+        // Random dealer selection
+        Dealers[] allDealers = fileParser.loadDealers();
+        DealerService dealerService = new DealerService();
+        Dealers[] randomFour = dealerService.randomDealers(allDealers, allDealers.length);
 
-        System.out.println("Low Stock Details");
-        if (demoSpares.lowStock()) {
-            System.out.println(demoSpares.name + " is low on stock.");
-        } else{
-            System.out.println(demoSpares.name + " stock is fine.");
+        if (randomFour.length == 4) {
+            dealerService.sortByLocation(randomFour);
+            dealerService.printDealers(randomFour);
         }
+        System.out.println();
+
+        Cart cart = new Cart();
+        Spares spare1 = inventory.searchByCode("P001");
+        Spares spare2 = inventory.searchByCode("P002");
+
+        if (spare1 != null) cart.addItem(spare1, 3);
+        if (spare2 != null) cart.addItem(spare2, 1);
+
+        cart.printCart();
+        cart.checkout(inventory, logger);
+
+        System.out.println("Done!");
     }
 }
