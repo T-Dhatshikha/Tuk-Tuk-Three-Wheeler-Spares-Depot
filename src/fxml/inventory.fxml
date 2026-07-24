@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane
+        xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="InventoryController"
+        prefHeight="700.0" prefWidth="1000.0">
+
+    <children>
+        <Label
+                text="Malabe Tuk-Tuk &amp; Three-Wheeler Spares Depot"
+                layoutX="20" layoutY="10"
+                style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+        <HBox layoutX="20" layoutY="45" spacing="10">
+            <children>
+                <Button text="Inventory"
+                        style="-fx-background-color: #2196F3;-fx-text-fill: white;"
+                        onAction="#goToInventory"/>
+                <Button text="Low Stock"
+                        onAction="#goToLowStock"/>
+                <Button text="Dealers"
+                        onAction="#goToDealers"/>
+                <Button text="Point of Sale"
+                        onAction="#goToPOS"/>
+                <Button text="Audit Log"
+                        onAction="#goToAudit"/>
+            </children>
+        </HBox>
+
+        <HBox layoutX="20" layoutY="90" spacing="8">
+            <children>
+                <Label text="Keyword:"/>
+                <TextField fx:id="keywordField"
+                           promptText="Search..."
+                           prefWidth="150"/>
+                <Label text="Category:"/>
+                <ComboBox fx:id="categoryBox"
+                          prefWidth="120"/>
+                <Label text="Min Price:"/>
+                <TextField fx:id="minPriceField"
+                           promptText="0"
+                           prefWidth="80"/>
+                <Label text="Max Price:"/>
+                <TextField fx:id="maxPriceField"
+                           promptText="99999"
+                           prefWidth="80"/>
+                <Button text="Search"
+                        style="-fx-background-color: #2196F3;
+                           -fx-text-fill: white;"
+                        onAction="#searchSpares"/>
+                <Button text="Show All"
+                        onAction="#showAll"/>
+            </children>
+        </HBox>
+
+        <TableView fx:id="inventoryTable"
+                   layoutX="20" layoutY="130"
+                   prefWidth="960" prefHeight="280">
+            <columns>
+                <TableColumn fx:id="codeCol"
+                             text="Code" prefWidth="70"/>
+                <TableColumn fx:id="nameCol"
+                             text="Name" prefWidth="200"/>
+                <TableColumn fx:id="brandCol"
+                             text="Brand" prefWidth="100"/>
+                <TableColumn fx:id="priceCol"
+                             text="Price" prefWidth="100"/>
+                <TableColumn fx:id="qtyCol"
+                             text="Qty" prefWidth="60"/>
+                <TableColumn fx:id="catCol"
+                             text="Category" prefWidth="100"/>
+                <TableColumn fx:id="dateCol"
+                             text="Date Added" prefWidth="120"/>
+            </columns>
+        </TableView>
+
+        <Label fx:id="totalLabel"
+               layoutX="20" layoutY="418"
+               style="-fx-font-weight: bold;"/>
+
+        <Label text="Add New Part:"
+               layoutX="20" layoutY="445"
+               style="-fx-font-weight: bold;"/>
+
+        <HBox layoutX="20" layoutY="468" spacing="8">
+            <children>
+                <TextField fx:id="addCode"
+                           promptText="Code" prefWidth="70"/>
+                <TextField fx:id="addName"
+                           promptText="Name" prefWidth="150"/>
+                <TextField fx:id="addBrand"
+                           promptText="Brand" prefWidth="80"/>
+                <TextField fx:id="addPrice"
+                           promptText="Price" prefWidth="80"/>
+                <TextField fx:id="addQty"
+                           promptText="Qty" prefWidth="60"/>
+                <ComboBox fx:id="addCatBox"
+                          prefWidth="110"/>
+                <Button text="Add Part"
+                        style="-fx-background-color: #4CAF50;
+                           -fx-text-fill: white;"
+                        onAction="#addSpare"/>
+            </children>
+        </HBox>
+
+        <!-- UPDATE AND DELETE SECTION -->
+        <Label text="Update / Delete:"
+               layoutX="20" layoutY="510"
+               style="-fx-font-weight: bold;"/>
+
+        <HBox layoutX="20" layoutY="533" spacing="8">
+            <children>
+                <TextField fx:id="editCode"
+                           promptText="Part Code" prefWidth="90"/>
+                <TextField fx:id="editQty"
+                           promptText="New Qty" prefWidth="90"/>
+                <Button text="Update Qty"
+                        style="-fx-background-color: #FF9800;
+                           -fx-text-fill: white;"
+                        onAction="#updateQty"/>
+                <TextField fx:id="editPrice"
+                           promptText="New Price" prefWidth="90"/>
+                <Button text="Update Price"
+                        style="-fx-background-color: #FF9800;
+                           -fx-text-fill: white;"
+                        onAction="#updatePrice"/>
+                <Button text="Delete Part"
+                        style="-fx-background-color: #f44336;
+                           -fx-text-fill: white;"
+                        onAction="#deleteSpares"/>
+            </children>
+        </HBox>
+
+        <Label fx:id="feedbackLabel"
+               layoutX="20" layoutY="575"
+               style="-fx-font-size: 13px;"/>
+
+    </children>
+</AnchorPane>
