@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane
+        xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="POSController"
+        prefHeight="700.0" prefWidth="1000.0">
+
+    <children>
+
+        <Label text="Malabe Tuk-Tuk &amp; Three-Wheeler Spares Depot"
+               layoutX="20" layoutY="10"
+               style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+        <HBox layoutX="20" layoutY="45" spacing="10">
+            <children>
+                <Button text="Inventory"
+                        onAction="#goToInventory"/>
+                <Button text="Low Stock"
+                        onAction="#goToLowStock"/>
+                <Button text="Dealers"
+                        onAction="#goToDealers"/>
+                <Button text="Point of Sale"
+                        style="-fx-background-color: #2196F3;
+                           -fx-text-fill: white;"
+                        onAction="#goToPOS"/>
+                <Button text="Audit Log"
+                        onAction="#goToAudit"/>
+            </children>
+        </HBox>
+
+        <Label text="Point of Sale"
+               layoutX="20" layoutY="90"
+               style="-fx-font-size: 16px;
+                   -fx-font-weight: bold;"/>
+
+        <!-- Add to cart controls -->
+        <HBox layoutX="20" layoutY="120" spacing="10">
+            <children>
+                <Label text="Part Code:"/>
+                <TextField fx:id="partCodeField"
+                           promptText="e.g. P001"
+                           prefWidth="120"/>
+                <Label text="Quantity:"/>
+                <TextField fx:id="qtyField"
+                           promptText="Qty"
+                           prefWidth="80"/>
+                <Button text="Add to Cart"
+                        style="-fx-background-color: #4CAF50;
+                           -fx-text-fill: white;"
+                        onAction="#addToCart"/>
+                <Button text="Remove Item"
+                        style="-fx-background-color: #f44336;
+                           -fx-text-fill: white;"
+                        onAction="#removeFromCart"/>
+            </children>
+        </HBox>
+
+        <!-- Cart table -->
+        <TableView fx:id="cartTable"
+                   layoutX="20" layoutY="160"
+                   prefWidth="960" prefHeight="280">
+            <columns>
+                <TableColumn fx:id="codeCol"
+                             text="Code" prefWidth="80"/>
+                <TableColumn fx:id="nameCol"
+                             text="Name" prefWidth="200"/>
+                <TableColumn fx:id="priceCol"
+                             text="Unit Price" prefWidth="120"/>
+                <TableColumn fx:id="qtyCol"
+                             text="Qty" prefWidth="80"/>
+                <TableColumn fx:id="subtotalCol"
+                             text="Subtotal" prefWidth="120"/>
+                <TableColumn fx:id="discountCol"
+                             text="Bulk Discount" prefWidth="120"/>
+            </columns>
+        </TableView>
+
+        <!-- Totals section - VBox vertical column -->
+        <VBox layoutX="20" layoutY="455" spacing="8">
+            <children>
+                <Label fx:id="rawTotalLabel"
+                       text="Raw Total: Rs.0.00"/>
+                <Label fx:id="discountLabel"
+                       text="Discounts: None"/>
+                <Label fx:id="finalTotalLabel"
+                       text="FINAL TOTAL: Rs.0.00"
+                       style="-fx-font-size: 16px;
+                           -fx-font-weight: bold;"/>
+            </children>
+        </VBox>
+
+        <!-- Checkout buttons -->
+        <HBox layoutX="20" layoutY="560" spacing="10">
+            <children>
+                <Button text="CHECKOUT"
+                        style="-fx-background-color: #4CAF50;
+                           -fx-text-fill: white;
+                           -fx-font-size: 14px;"
+                        onAction="#checkout"/>
+                <Button text="Clear Cart"
+                        style="-fx-background-color: #f44336;
+                           -fx-text-fill: white;"
+                        onAction="#clearCart"/>
+            </children>
+        </HBox>
+
+        <Label fx:id="posStatusLabel"
+               layoutX="20" layoutY="600"
+               style="-fx-font-size: 13px;"/>
+
+    </children>
+</AnchorPane>
