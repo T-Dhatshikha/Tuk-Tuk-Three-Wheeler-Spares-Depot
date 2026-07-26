@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane
+        xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="DealerController"
+        prefHeight="700.0" prefWidth="1000.0">
+
+    <children>
+
+        <Label text="Malabe Tuk-Tuk &amp; Three-Wheeler Spares Depot"
+               layoutX="20" layoutY="10"
+               style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+        <HBox layoutX="20" layoutY="45" spacing="10">
+            <children>
+                <Button text="Inventory"
+                        onAction="#goToInventory"/>
+                <Button text="Low Stock"
+                        onAction="#goToLowStock"/>
+                <Button text="Dealers"
+                        style="-fx-background-color: #2196F3;
+                           -fx-text-fill: white;"
+                        onAction="#goToDealers"/>
+                <Button text="Point of Sale"
+                        onAction="#goToPOS"/>
+                <Button text="Audit Log"
+                        onAction="#goToAudit"/>
+            </children>
+        </HBox>
+
+        <Label text="Random Dealer Selection"
+               layoutX="20" layoutY="90"
+               style="-fx-font-size: 16px;
+                   -fx-font-weight: bold;"/>
+
+        <Label
+                text="Click the button to randomly select 4 unique dealers sorted by location."
+                layoutX="20" layoutY="120"/>
+
+        <Button text="Select 4 Random Dealers"
+                layoutX="20" layoutY="150"
+                style="-fx-background-color: #9C27B0;
+                   -fx-text-fill: white;
+                   -fx-font-size: 14px;"
+                onAction="#selectDealers"/>
+
+        <TableView fx:id="dealerTable"
+                   layoutX="20" layoutY="195"
+                   prefWidth="960" prefHeight="350">
+            <columns>
+                <TableColumn fx:id="idCol"
+                             text="ID" prefWidth="80"/>
+                <TableColumn fx:id="nameCol"
+                             text="Name" prefWidth="250"/>
+                <TableColumn fx:id="phoneCol"
+                             text="Phone" prefWidth="150"/>
+                <TableColumn fx:id="locationCol"
+                             text="Location" prefWidth="200"/>
+            </columns>
+        </TableView>
+
+        <Label fx:id="statusLabel"
+               layoutX="20" layoutY="555"
+               style="-fx-font-size: 13px;"/>
+
+    </children>
+</AnchorPane>
