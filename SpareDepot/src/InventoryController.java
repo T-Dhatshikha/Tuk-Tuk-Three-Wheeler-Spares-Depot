@@ -13,13 +13,13 @@ import java.util.ResourceBundle;
 
 public class InventoryController implements Initializable {
 
-    @FXML private TableView<Spares>           inventoryTable;
+    @FXML private TableView<Spares> inventoryTable;
     @FXML private TableColumn<Spares, String> codeCol;
     @FXML private TableColumn<Spares, String> nameCol;
     @FXML private TableColumn<Spares, String> brandCol;
     @FXML private TableColumn<Spares, String> priceCol;
     @FXML private TableColumn<Spares, String> qtyCol;
-    @FXML private TableColumn<TMSchema.Spares, String> catCol;
+    @FXML private TableColumn<Spares, String> catCol;
     @FXML private TableColumn<Spares, String> dateCol;
 
     @FXML private TextField  keywordField;
@@ -27,33 +27,26 @@ public class InventoryController implements Initializable {
     @FXML private TextField  minPriceField;
     @FXML private TextField  maxPriceField;
 
-    @FXML private TextField  addCode;
-    @FXML private TextField  addName;
-    @FXML private TextField  addBrand;
-    @FXML private TextField  addPrice;
-    @FXML private TextField  addQty;
+    @FXML private TextField addCode;
+    @FXML private TextField addName;
+    @FXML private TextField addBrand;
+    @FXML private TextField addPrice;
+    @FXML private TextField addQty;
     @FXML private ComboBox<String> addCatBox;
 
-    @FXML private TextField  editCode;
-    @FXML private TextField  editQty;
-    @FXML private TextField  editPrice;
+    @FXML private TextField editCode;
+    @FXML private TextField editQty;
+    @FXML private TextField editPrice;
 
     @FXML private Label totalLabel;
     @FXML private Label feedbackLabel;
 
-    static FileParser  fileParser = new FileParser();
-    static AuditLogger logger = new AuditLogger();
-    static InventoryManager inventory = new InventoryManager(
-            fileParser);
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        categoryBox.getItems().addAll(
-                "All", "Engine", "Brakes", "Electrical", "Bodywork");
+        categoryBox.getItems().addAll("All", "Engine", "Brakes", "Electrical", "Bodywork");
         categoryBox.setValue("All");
 
-        addCatBox.getItems().addAll(
-                "Engine", "Brakes", "Electrical", "Bodywork");
+        addCatBox.getItems().addAll("Engine", "Brakes", "Electrical", "Bodywork");
         addCatBox.setValue("Engine");
 
         codeCol.setCellValueFactory(
@@ -71,14 +64,14 @@ public class InventoryController implements Initializable {
         dateCol.setCellValueFactory(
                 new PropertyValueFactory<>("dateAdded"));
 
-        inventory.sort();
+        Main.inventory.sort();
         refreshTable();
     }
 
     private void refreshTable() {
         inventoryTable.getItems().clear();
-        Spares[] spares = inventory.getSpares();
-        int count    = inventory.getSpareCount();
+        Spares[] spares = Main.inventory.getSpares();
+        int count = Main.inventory.getSpareCount();
 
         for (int i = 0; i < count; i++) {
             if (spares[i] != null) {
@@ -86,9 +79,8 @@ public class InventoryController implements Initializable {
             }
         }
 
-        // Update total label
         totalLabel.setText(
-                "Total Parts: " + inventory.getSpareCount() + "   |   Total Value: Rs." + String.format("%.2f", inventory.getTotalValue()));
+                "Total Parts: " + Main.inventory.getSpareCount() + "   |   Total Value: Rs." + String.format("%.2f", Main.inventory.getTotalValue()));
     }
 
     @FXML
@@ -104,7 +96,7 @@ public class InventoryController implements Initializable {
         }
 
         double price = 0;
-        int qty = 0;
+        int quantity = 0;
 
         try {
             price = Double.parseDouble(addPrice.getText().trim());
@@ -114,21 +106,20 @@ public class InventoryController implements Initializable {
         }
 
         try {
-            qty = Integer.parseInt(addQty.getText().trim());
+            quantity = Integer.parseInt(addQty.getText().trim());
         } catch (NumberFormatException e) {
             showError("Invalid quantity value!");
             return;
         }
 
-        Spares newSpare = new Spares(code, name, brand,
-                price, qty, cat, "", "");
+        Spares newSpare = new Spares(code, name, brand, price, quantity, cat, "", "");
 
-        boolean success = inventory.addSpare(newSpare);
+        boolean success = Main.inventory.addSpare(newSpare);
 
         if (success) {
-            logger.log("ADD", code, qty);
+            Main.logger.log("ADD", code, quantity);
             clearAddFields();
-            inventory.sort();
+            Main.inventory.sort();
             refreshTable();
             showSuccess(name + " added successfully!");
         } else {
@@ -137,7 +128,7 @@ public class InventoryController implements Initializable {
     }
 
     @FXML
-    private void updateQty(ActionEvent event) {
+    private void updateQuantity(ActionEvent event) {
 
         String code = editCode.getText().trim();
         if (code.equals("")) {
@@ -148,11 +139,11 @@ public class InventoryController implements Initializable {
         try {
             int newQty = Integer.parseInt(editQty.getText().trim());
 
-            boolean success = inventory.updateQuantity(
+            boolean success = Main.inventory.updateQuantity(
                     code, newQty);
 
             if (success) {
-                logger.log("UPDATE_QTY", code, newQty);
+                Main.logger.log("UPDATE_QTY", code, newQty);
                 refreshTable();
                 showSuccess("Quantity updated!");
             } else {
@@ -177,11 +168,11 @@ public class InventoryController implements Initializable {
         try {
             double newPrice = Double.parseDouble(editPrice.getText().trim());
 
-            boolean success = inventory.updatePrice(
+            boolean success = Main.inventory.updatePrice(
                     code, newPrice);
 
             if (success) {
-                logger.log("UPDATE_PRICE", code, 0);
+                Main.logger.log("UPDATE_PRICE", code, 0);
                 refreshTable();
                 showSuccess("Price updated!");
             } else {
@@ -203,10 +194,10 @@ public class InventoryController implements Initializable {
             return;
         }
 
-        boolean success = inventory.deleteSpare(code);
+        boolean success = Main.inventory.deleteSpare(code);
 
         if (success) {
-            logger.log("DELETE", code, 0);
+            Main.logger.log("DELETE", code, 0);
             refreshTable();
             showSuccess("Part deleted!");
         } else {
@@ -229,19 +220,17 @@ public class InventoryController implements Initializable {
 
         try {
             if (!minPriceField.getText().trim().equals("")) {
-                minPrice = Double.parseDouble(
-                        minPriceField.getText().trim());
+                minPrice = Double.parseDouble(minPriceField.getText().trim());
             }
             if (!maxPriceField.getText().trim().equals("")) {
-                maxPrice = Double.parseDouble(
-                        maxPriceField.getText().trim());
+                maxPrice = Double.parseDouble(maxPriceField.getText().trim());
             }
         } catch (NumberFormatException e) {
             showError("Invalid price range!");
             return;
         }
 
-        Spares[] results = inventory.searchSpares(
+        Spares[] results = Main.inventory.searchSpares(
                 keyword, cat, minPrice, maxPrice);
 
         inventoryTable.getItems().clear();
@@ -252,75 +241,63 @@ public class InventoryController implements Initializable {
             }
         }
 
-        showFeedback(results.length
-                + " results found.", "blue");
+        showFeedback(results.length + " results found.", "blue");
     }
 
     @FXML
     private void showAll(ActionEvent event) {
-        inventory.sort();
+        Main.inventory.sort();
         refreshTable();
         showFeedback("Showing all parts.", "blue");
     }
 
     @FXML
-    private void goToInventory(ActionEvent event)
-            throws Exception {
-        navigateTo("fxml/inventory.fxml", event);
+    private void goToInventory(ActionEvent event) throws Exception {
+        navigateTo("/fxml/inventory.fxml", event);
     }
 
     @FXML
-    private void goToLowStock(ActionEvent event)
-            throws Exception {
-        navigateTo("fxml/lowstock.fxml", event);
+    private void goToLowStock(ActionEvent event) throws Exception {
+        navigateTo("/fxml/lowstock.fxml", event);
     }
 
     @FXML
-    private void goToDealers(ActionEvent event)
-            throws Exception {
-        navigateTo("fxml/dealer.fxml", event);
+    private void goToDealers(ActionEvent event) throws Exception {
+        navigateTo("/fxml/dealer.fxml", event);
     }
 
     @FXML
-    private void goToPOS(ActionEvent event)
-            throws Exception {
-        navigateTo("fxml/pos.fxml", event);
+    private void goToPOS(ActionEvent event) throws Exception {
+        navigateTo("/fxml/pos.fxml", event);
     }
 
     @FXML
-    private void goToAudit(ActionEvent event)
-            throws Exception {
-        navigateTo("fxml/audit.fxml", event);
+    private void goToAudit(ActionEvent event) throws Exception {
+        navigateTo("/fxml/audit.fxml", event);
     }
 
     private void navigateTo(String fxmlPath, ActionEvent event) throws Exception {
-        Parent root = FXMLLoader.load(
-                getClass().getResource(fxmlPath));
+        Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
 
-        Stage stage = (Stage)((Node) event.getSource())
-                .getScene().getWindow();
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
 
         stage.setScene(new Scene(root, 1000, 700));
     }
 
     private void showSuccess(String message) {
-        feedbackLabel.setText("✓ " + message);
-        feedbackLabel.setStyle(
-                "-fx-text-fill: green; -fx-font-size: 13px;");
+        feedbackLabel.setText(message);
+        feedbackLabel.setStyle("-fx-text-fill: green; -fx-font-size: 13px;");
     }
 
     private void showError(String message) {
-        feedbackLabel.setText("✗ " + message);
-        feedbackLabel.setStyle(
-                "-fx-text-fill: red; -fx-font-size: 13px;");
+        feedbackLabel.setText("X " + message);
+        feedbackLabel.setStyle("-fx-text-fill: red; -fx-font-size: 13px;");
     }
 
     private void showFeedback(String message,
                               String color) {
         feedbackLabel.setText(message);
-        feedbackLabel.setStyle(
-                "-fx-text-fill: " + color
-                        + "; -fx-font-size: 13px;");
+        feedbackLabel.setStyle("-fx-text-fill: " + color + "; -fx-font-size: 13px;");
     }
 
     private void clearAddFields() {

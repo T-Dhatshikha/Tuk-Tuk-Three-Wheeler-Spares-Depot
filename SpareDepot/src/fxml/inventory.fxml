@@ -107,7 +107,6 @@
             </children>
         </HBox>
 
-        <!-- UPDATE AND DELETE SECTION -->
         <Label text="Update / Delete:"
                layoutX="20" layoutY="510"
                style="-fx-font-weight: bold;"/>
@@ -121,7 +120,7 @@
                 <Button text="Update Qty"
                         style="-fx-background-color: #FF9800;
                            -fx-text-fill: white;"
-                        onAction="#updateQty"/>
+                        onAction="#updateQuantity"/>
                 <TextField fx:id="editPrice"
                            promptText="New Price" prefWidth="90"/>
                 <Button text="Update Price"
