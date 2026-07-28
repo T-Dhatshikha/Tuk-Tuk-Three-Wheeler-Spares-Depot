@@ -42,6 +42,6 @@ public class CartItem {
     }
 
     public String toString() {
-        return spare.getPartCode() + " , " + spare.getName() + " , Quantity: " + buyingQuantity + " , Rs." + spare.getPrice() + " , Subtotal: Rs." + discountedSubtotal();
+        return spare.getCode() + " , " + spare.getName() + " , Quantity: " + buyingQuantity + " , Rs." + spare.getPrice() + " , Subtotal: Rs." + discountedSubtotal();
     }
 }

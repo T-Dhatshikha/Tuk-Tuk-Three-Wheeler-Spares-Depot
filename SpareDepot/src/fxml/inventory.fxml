@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane
@@ -75,6 +76,10 @@
                              text="Category" prefWidth="100"/>
                 <TableColumn fx:id="dateCol"
                              text="Date Added" prefWidth="120"/>
+                <TableColumn fx:id="imageCol"
+                             text="Image" prefWidth="100"/>
+                <TableColumn fx:id="thresholdCol"
+                             text="Threshold" prefWidth="80"/>
             </columns>
         </TableView>
 
@@ -98,8 +103,12 @@
                            promptText="Price" prefWidth="80"/>
                 <TextField fx:id="addQty"
                            promptText="Qty" prefWidth="60"/>
+                <TextField fx:id="addThreshold"
+                           promptText="Threshold" prefWidth="70"/>
                 <ComboBox fx:id="addCatBox"
                           prefWidth="110"/>
+                <DatePicker fx:id="addDatePicker"
+                            promptText="Date Added"/>
                 <Button text="Add Part"
                         style="-fx-background-color: #4CAF50;
                            -fx-text-fill: white;"
@@ -127,6 +136,12 @@
                         style="-fx-background-color: #FF9800;
                            -fx-text-fill: white;"
                         onAction="#updatePrice"/>
+                <TextField fx:id="editThreshold"
+                           promptText="New Thresh." prefWidth="80"/>
+                <Button text="Update Threshold"
+                        style="-fx-background-color: #FF9800;
+                           -fx-text-fill: white;"
+                        onAction="#updateThreshold"/>
                 <Button text="Delete Part"
                         style="-fx-background-color: #f44336;
                            -fx-text-fill: white;"

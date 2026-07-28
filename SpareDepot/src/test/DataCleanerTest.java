@@ -68,7 +68,7 @@ public class DataCleanerTest {
         String line = "P001,Bajaj Piston,Bajaj,4500.00,15,Engine,2023-10-12,piston.jpg";
         Spares s = cleaner.parsePart(line);
         assertNotNull(s);
-        assertEquals("P001", s.getPartCode());
+        assertEquals("P001", s.getCode());
         assertEquals("Bajaj Piston", s.getName());
         assertEquals(4500.0, s.getPrice(), 0.01);
         assertEquals(15, s.getQuantity());
@@ -80,7 +80,7 @@ public class DataCleanerTest {
         String line = "P002|Brake Pad|TVS|1250|8|Brakes|2023|img.png";
         Spares s = cleaner.parsePart(line);
         assertNotNull(s);
-        assertEquals("P002", s.getPartCode());
+        assertEquals("P002", s.getCode());
         assertEquals(1250.0, s.getPrice(), 0.01);
         assertEquals(8, s.getQuantity());
     }
@@ -90,7 +90,7 @@ public class DataCleanerTest {
         String line = "P003;Tyre;Brand;6500;24;Bodywork;2023;img.jpg";
         Spares s = cleaner.parsePart(line);
         assertNotNull(s);
-        assertEquals("P003", s.getPartCode());
+        assertEquals("P003", s.getCode());
         assertEquals(24, s.getQuantity());
     }
 
@@ -100,7 +100,7 @@ public class DataCleanerTest {
                 "P003;Tyre;;6500;24;Bodywork;2023;img.jpg";
         Spares s = cleaner.parsePart(line);
         assertNotNull(s);
-        assertEquals("P003", s.getPartCode());
+        assertEquals("P003", s.getCode());
     }
 
     @Test

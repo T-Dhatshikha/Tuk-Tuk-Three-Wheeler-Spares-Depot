@@ -56,7 +56,8 @@ public class LowStockMonitor {
         for(int i = 0; i < spareCount; i++) {
             if (spares[i] != null && isLowStock(spares[i])){
                 System.out.println("WARNING !!! This Product is low in stock.");
-                System.out.println("Code: " + spares[i].getPartCode() + " Name: " + spares[i].getName() + " Quantity: " + spares[i].getQuantity() + " Category: " + spares[i].getCategory());
+                System.out.println("Code: " + spares[i].getCode() + " Name: " + spares[i].getName() + " Quantity: " + spares[i].getQuantity()
+                        + " Category: " + spares[i].getCategory());
                 lowStockCount += 1;
             }
         }

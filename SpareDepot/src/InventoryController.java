@@ -10,6 +10,12 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import java.io.InputStream;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
+import java.time.LocalDate;
 
 public class InventoryController implements Initializable {
 
@@ -21,6 +27,8 @@ public class InventoryController implements Initializable {
     @FXML private TableColumn<Spares, String> qtyCol;
     @FXML private TableColumn<Spares, String> catCol;
     @FXML private TableColumn<Spares, String> dateCol;
+    @FXML private TableColumn<Spares, String> imageCol;
+    @FXML private TableColumn<Spares, Integer> thresholdCol;
 
     @FXML private TextField  keywordField;
     @FXML private ComboBox<String> categoryBox;
@@ -32,14 +40,18 @@ public class InventoryController implements Initializable {
     @FXML private TextField addBrand;
     @FXML private TextField addPrice;
     @FXML private TextField addQty;
+    @FXML private TextField addThreshold;
+    @FXML private DatePicker addDatePicker;
     @FXML private ComboBox<String> addCatBox;
 
     @FXML private TextField editCode;
     @FXML private TextField editQty;
     @FXML private TextField editPrice;
+    @FXML private TextField editThreshold;
 
     @FXML private Label totalLabel;
     @FXML private Label feedbackLabel;
+    @FXML private ImageView partImageView;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -63,6 +75,46 @@ public class InventoryController implements Initializable {
                 new PropertyValueFactory<>("category"));
         dateCol.setCellValueFactory(
                 new PropertyValueFactory<>("dateAdded"));
+
+        if (imageCol != null) {
+            imageCol.setCellValueFactory(new PropertyValueFactory<>("imageName"));
+            imageCol.setCellFactory(param -> new TableCell<Spares, String>() {
+                private final ImageView cellImageView = new ImageView();
+
+                @Override
+                protected void updateItem(String imageName, boolean empty) {
+                    super.updateItem(imageName, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        Image img = fetchImage(imageName);
+                        if (img != null) {
+                            cellImageView.setImage(img);
+                            cellImageView.setFitWidth(40);
+                            cellImageView.setFitHeight(40);
+                            cellImageView.setPreserveRatio(true);
+                            setGraphic(cellImageView);
+                        } else {
+                            setGraphic(null);
+                        }
+                    }
+                }
+            });
+        }
+
+        thresholdCol.setCellValueFactory(
+                new PropertyValueFactory<>("threshold"));
+
+        inventoryTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                String imgRef = (newSelection.getImageName() != null && !newSelection.getImageName().trim().isEmpty())
+                        ? newSelection.getImageName()
+                        : newSelection.getCode();
+                showImage(imgRef);
+            } else {
+                partImageView.setImage(null);
+            }
+        });
 
         Main.inventory.sort();
         refreshTable();
@@ -88,7 +140,9 @@ public class InventoryController implements Initializable {
         String code  = addCode.getText().trim();
         String name  = addName.getText().trim();
         String brand = addBrand.getText().trim();
+        int threshold = 10;
         String cat   = addCatBox.getValue();
+        String dateAdded;
 
         if (code.equals("") || name.equals("") || addPrice.getText().trim().equals("") || addQty.getText().trim().equals("")) {
             showError("All fields are required!");
@@ -112,7 +166,22 @@ public class InventoryController implements Initializable {
             return;
         }
 
-        Spares newSpare = new Spares(code, name, brand, price, quantity, cat, "", "");
+        if (addDatePicker.getValue() != null) {
+            dateAdded = addDatePicker.getValue().toString();
+        } else {
+            dateAdded = LocalDate.now().toString();
+        }
+
+        if (!addThreshold.getText().trim().isEmpty()) {
+            try {
+                threshold = Integer.parseInt(addThreshold.getText().trim());
+            } catch (NumberFormatException e) {
+                showError("Invalid threshold value!");
+                return;
+            }
+        }
+
+        Spares newSpare = new Spares(code, name, brand, price, quantity, cat, dateAdded, "", threshold);
 
         boolean success = Main.inventory.addSpare(newSpare);
 
@@ -181,6 +250,32 @@ public class InventoryController implements Initializable {
 
         } catch (NumberFormatException e) {
             showError("Invalid price!");
+        }
+    }
+
+    @FXML
+    private void updateThreshold(ActionEvent event) {
+        String code = editCode.getText().trim();
+        if (code.isEmpty()) {
+            showError("Enter a part code!");
+            return;
+        }
+
+        try {
+            int newThreshold = Integer.parseInt(editThreshold.getText().trim());
+
+            boolean success = Main.inventory. updateThreshold(
+                    code, newThreshold);
+
+            if (success) {
+                Main.logger.log("UPDATE_THRESHOLD", code, newThreshold);
+                refreshTable();
+                showSuccess("Threshold updated!");
+            } else {
+                showError("Part code not found!");
+            }
+        } catch (NumberFormatException e) {
+            showError("Invalid threshold!");
         }
     }
 
@@ -306,5 +401,69 @@ public class InventoryController implements Initializable {
         addBrand.clear();
         addPrice.clear();
         addQty.clear();
+        addDatePicker.setValue(null);
+        addThreshold.clear();
+    }
+
+    private Image fetchImage(String imageName) {
+        if (imageName == null || imageName.trim().isEmpty()) {
+            return null;
+        }
+
+        String name = imageName.trim();
+        String[] possiblePaths;
+
+        if (name.contains(".")) {
+            // Path has extension already
+            possiblePaths = new String[]{
+                    "/images/" + name,
+                    "/Images/" + name,
+                    "/" + name
+            };
+        } else {
+            // Path missing extension; test common extensions
+            possiblePaths = new String[]{
+                    "/images/" + name + ".png",
+                    "/images/" + name + ".jpg",
+                    "/images/" + name + ".jpeg",
+                    "/Images/" + name + ".png",
+                    "/Images/" + name + ".jpg",
+                    "/Images/" + name + ".jpeg"
+            };
+        }
+
+        for (String path : possiblePaths) {
+            try {
+                InputStream stream = getClass().getResourceAsStream(path);
+                if (stream != null) {
+                    return new Image(stream);
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
+    private void showImage(String imageName) {
+        Image image = fetchImage(imageName);
+        if (image != null) {
+            partImageView.setImage(image);
+        } else {
+            partImageView.setImage(null);
+            System.out.println("Image not found: " + imageName);
+        }
+    }
+
+    public boolean updateThreshold(String code, int newThreshold) {
+        Spares[] spares = Main.inventory.getSpares();
+        int count = Main.inventory.getSpareCount();
+
+        for (int i = 0; i < count; i++) {
+            if (spares[i] != null && spares[i].getCode().equalsIgnoreCase(code)) {
+                spares[i].setThreshold(newThreshold);
+                return true;
+            }
+        }
+        return false;
     }
 }

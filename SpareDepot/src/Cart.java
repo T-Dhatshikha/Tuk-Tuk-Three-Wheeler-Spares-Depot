@@ -8,7 +8,6 @@ public class Cart {
         itemCount = 0;
     }
 
-    // METHOD 1 - Add item to cart
     public boolean addItem(Spares spare, int buyingQuantity) {
         if (buyingQuantity <= 0) {
             System.out.println("Quantity must be above 0!");
@@ -21,7 +20,7 @@ public class Cart {
         }
 
         for (int i = 0; i < itemCount; i++) {
-            if (items[i].getSpare().getPartCode().equals(spare.getPartCode())) {
+            if (items[i].getSpare().getCode().equals(spare.getCode())) {
                 int newQty = items[i].getBuyingQuantity() + buyingQuantity;
                 if (newQty > spare.getQuantity()) {
                     System.out.println("Total would exceed stock!");
@@ -39,10 +38,9 @@ public class Cart {
         return true;
     }
 
-    // METHOD 2 - Remove item from cart by part code
     public boolean removeItem(String code) {
         for (int i = 0; i < itemCount; i++) {
-            if (items[i].getSpare().getPartCode().equals(code)) {
+            if (items[i].getSpare().getCode().equals(code)) {
                 for (int j = i; j < itemCount - 1; j++) {
                     items[j] = items[j + 1];
                 }
@@ -56,7 +54,6 @@ public class Cart {
         return false;
     }
 
-    // METHOD 3 - Check if cart has Engine part
     public boolean hasEngine() {
         for (int i = 0; i < itemCount; i++) {
             if (items[i].getSpare().getCategory().equalsIgnoreCase("Engine")) {
@@ -66,7 +63,6 @@ public class Cart {
         return false;
     }
 
-    // METHOD 4 - Check if cart has Electrical part
     public boolean hasElectrical() {
         for (int i = 0; i < itemCount; i++) {
             if (items[i].getSpare().getCategory().equalsIgnoreCase("Electrical")) {
@@ -76,7 +72,6 @@ public class Cart {
         return false;
     }
 
-    // METHOD 5 - Calculate total BEFORE discounts
     public double rawTotal() {
         double total = 0;
         for (int i = 0; i < itemCount; i++) {
@@ -85,7 +80,6 @@ public class Cart {
         return total;
     }
 
-    // METHOD 6 - Calculate total AFTER all discounts
     public double finalTotal() {
         double totalAfterBulk = 0;
         for (int i = 0; i < itemCount; i++) {
@@ -99,12 +93,10 @@ public class Cart {
         return totalAfterBulk;
     }
 
-    // METHOD 7 - Check if synergy discount applies
     public boolean hasSynergyDiscount() {
         return hasEngine() && hasElectrical();
     }
 
-    // METHOD 8 - Process checkout
     public boolean checkout(InventoryManager inventory, AuditLogger logger) {
         if (itemCount == 0) {
             System.out.println("Cart is empty!");
@@ -117,9 +109,9 @@ public class Cart {
 
             int newQty = spare.getQuantity() - item.getBuyingQuantity();
 
-            inventory.updateQuantity(spare.getPartCode(), newQty);
+            inventory.updateQuantity(spare.getCode(), newQty);
 
-            logger.log("Checkout: ", spare.getPartCode(), item.getBuyingQuantity());
+            logger.log("Checkout: ", spare.getCode(), item.getBuyingQuantity());
         }
 
         System.out.println("Checkout complete! Total: Rs." + finalTotal());
@@ -127,7 +119,6 @@ public class Cart {
         return true;
     }
 
-    // METHOD 9 - Clear cart
     public void clearCart() {
         for (int i = 0; i < itemCount; i++) {
             items[i] = null;

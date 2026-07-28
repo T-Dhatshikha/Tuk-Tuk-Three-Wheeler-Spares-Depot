@@ -44,7 +44,7 @@ public class AuditController implements Initializable {
             }
 
             while (line != null) {
-                logArea.appendText(line);
+                logArea.appendText(line + "\n");
                 line = reader.readLine();
             }
 
@@ -56,23 +56,23 @@ public class AuditController implements Initializable {
     }
 
     @FXML private void goToInventory(ActionEvent event) throws Exception {
-        navigateTo("fxml/inventory.fxml", event);
+        navigateTo("/fxml/inventory.fxml", event);
     }
 
     @FXML private void goToLowStock(ActionEvent event) throws Exception {
-        navigateTo("fxml/lowstock.fxml", event);
+        navigateTo("/fxml/lowstock.fxml", event);
     }
 
     @FXML private void goToDealers(ActionEvent event) throws Exception {
-        navigateTo("fxml/dealer.fxml", event);
+        navigateTo("/fxml/dealer.fxml", event);
     }
 
     @FXML private void goToPOS(ActionEvent event) throws Exception {
-        navigateTo("fxml/pos.fxml", event);
+        navigateTo("/fxml/pos.fxml", event);
     }
 
     @FXML private void goToAudit(ActionEvent event) throws Exception {
-        navigateTo("fxml/audit.fxml", event);
+        navigateTo("/fxml/audit.fxml", event);
     }
 
 

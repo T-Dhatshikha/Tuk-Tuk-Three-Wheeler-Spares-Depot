@@ -35,7 +35,7 @@ public class POSController implements Initializable {
 
         codeCol.setCellValueFactory(
                 data -> new javafx.beans.property.SimpleStringProperty(
-                        data.getValue().getSpare().getPartCode()));
+                        data.getValue().getSpare().getCode()));
 
         nameCol.setCellValueFactory(
                 data -> new javafx.beans.property.SimpleStringProperty(
@@ -176,23 +176,23 @@ public class POSController implements Initializable {
     }
 
     @FXML private void goToInventory(ActionEvent event) throws Exception {
-        navigateTo("fxml/inventory.fxml", event);
+        navigateTo("/fxml/inventory.fxml", event);
     }
 
     @FXML private void goToLowStock(ActionEvent event) throws Exception {
-        navigateTo("fxml/lowstock.fxml", event);
+        navigateTo("/fxml/lowstock.fxml", event);
     }
 
     @FXML private void goToDealers(ActionEvent event) throws Exception {
-        navigateTo("fxml/dealer.fxml", event);
+        navigateTo("/fxml/dealer.fxml", event);
     }
 
     @FXML private void goToPOS(ActionEvent event) throws Exception {
-        navigateTo("fxml/pos.fxml", event);
+        navigateTo("/fxml/pos.fxml", event);
     }
 
     @FXML private void goToAudit(ActionEvent event) throws Exception {
-        navigateTo("fxml/audit.fxml", event);
+        navigateTo("/fxml/audit.fxml", event);
     }
 
     private void navigateTo(String path, ActionEvent event) throws Exception {

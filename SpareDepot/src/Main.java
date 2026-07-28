@@ -6,15 +6,15 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    public static FileParser       fileParser;
-    public static AuditLogger      logger;
+    public static FileParser fileParser;
+    public static AuditLogger logger;
     public static InventoryManager inventory;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         fileParser = new FileParser();
-        logger     = new AuditLogger();
+        logger = new AuditLogger();
         inventory  = new InventoryManager(fileParser);
 
         inventory.sort();

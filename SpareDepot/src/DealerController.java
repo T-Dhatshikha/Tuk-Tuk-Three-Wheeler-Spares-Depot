@@ -63,15 +63,15 @@ public class DealerController implements Initializable {
     }
 
     @FXML private void goToInventory(ActionEvent event) throws Exception {
-        navigateTo("fxml/inventory.fxml", event);
+        navigateTo("/fxml/inventory.fxml", event);
     }
 
     @FXML private void goToLowStock(ActionEvent event) throws Exception {
-        navigateTo("fxml/lowstock.fxml", event);
+        navigateTo("/fxml/lowstock.fxml", event);
     }
 
     @FXML private void goToDealers(ActionEvent event) throws Exception {
-        navigateTo("fxml/dealer.fxml", event);
+        navigateTo("/fxml/dealer.fxml", event);
     }
 
     @FXML private void goToPOS(ActionEvent event) throws Exception {
@@ -79,7 +79,7 @@ public class DealerController implements Initializable {
     }
 
     @FXML private void goToAudit(ActionEvent event) throws Exception {
-        navigateTo("fxml/audit.fxml", event);
+        navigateTo("/fxml/audit.fxml", event);
     }
 
     private void navigateTo(String path, ActionEvent event) throws Exception {
